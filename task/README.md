@@ -15,8 +15,7 @@
 - **control** - środowisko pracy: ma Ansible, git i repo `~/workspace`.
 - **target** - konfigurowany host.
 - Repo `~/workspace` jest **montowane** z katalogu hosta `task/workspace` (przy
-  pierwszym starcie odtwarzane z pakietu). Twoja poprawka z ostatniego etapu zostaje
-  na dysku hosta - możesz je edytować także swoim edytorem na hoście.
+  pierwszym starcie odtwarzane z pakietu).
 
 ## Wymagania
 
