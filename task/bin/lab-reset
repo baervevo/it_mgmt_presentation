@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+ssh -i /keys/id \
+    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    deploy@target 'sudo pkill nginx || true'
+echo "nginx zatrzymany na target, następny lab-deploy wystartuje go od nowa"
