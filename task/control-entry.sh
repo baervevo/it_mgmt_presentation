@@ -9,7 +9,6 @@ chmod 600 /keys/id
 chmod 644 /keys/id.pub /keys/authorized_keys
 
 if [ ! -e /root/workspace/.git ]; then
-    echo ">> [control] Odtwarzam repo z lab-repo.bundle do /root/workspace ..."
     git clone -q /opt/lab-repo.bundle /root/workspace
     git -C /root/workspace remote remove origin 2>/dev/null || true
     chmod -R a+rwX /root/workspace

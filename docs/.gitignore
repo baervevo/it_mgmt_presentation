@@ -29,7 +29,9 @@
 *.pdfsync
 
 # Auxiliary and intermediate files
-*.pdf
+*.vrb
+*.snm
+*.nav
 *.dvi
 *.xdv
 *-converted-to.*

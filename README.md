@@ -1,0 +1,1 @@
+Prezentacja znajduje się w katalogu `docs`.
