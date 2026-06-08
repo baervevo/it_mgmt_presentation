@@ -1,0 +1,37 @@
+\frametitle{Ansible -- podstawy dla \'{c}wicze\'n}
+\begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Struktura projektu}
+            \begin{itemize}
+                \item \texttt{inventory/} -- lista host\'ow
+                \item \texttt{playbooks/} -- g\l{}\'owne playbooki
+                \item \texttt{roles/} -- wielokrotnego u\.zytku
+                \item \texttt{group\_vars/} -- zmienne grup
+                \item \texttt{ansible.cfg} -- konfiguracja
+            \end{itemize}
+            \vspace{0.3em}
+            \textbf{Ad-hoc commands}\\[0.2em]
+            \texttt{\scriptsize ansible all -m ping}\\
+            \texttt{\scriptsize ansible web -m apt -a "name=nginx"}\\
+            \texttt{\scriptsize ansible-playbook site.yml}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Przyk\l{}adowy playbook YAML}\\[0.2em]
+            \scriptsize
+            \texttt{---}\\
+            \texttt{- hosts: webservers}\\
+            \texttt{\ \ become: yes}\\
+            \texttt{\ \ vars:}\\
+            \texttt{\ \ \ \ pkg: nginx}\\
+            \texttt{\ \ tasks:}\\
+            \texttt{\ \ - name: Install {{ pkg }}}\\
+            \texttt{\ \ \ \ apt:}\\
+            \texttt{\ \ \ \ \ \ name: "{{ pkg }}"}\\
+            \texttt{\ \ \ \ \ \ state: present}\\
+            \texttt{\ \ - name: Start {{ pkg }}}\\
+            \texttt{\ \ \ \ service:}\\
+            \texttt{\ \ \ \ \ \ name: "{{ pkg }}"}\\
+            \texttt{\ \ \ \ \ \ state: started}\\
+            \texttt{\ \ \ \ \ \ enabled: yes}
+        \end{column}
+    \end{columns}

@@ -1,18 +1,568 @@
-\documentclass{report}
+\documentclass{beamer}
+
+\usetheme{Madrid}
 
 \usepackage[T1]{fontenc}
 \usepackage[polish]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{float}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{svg}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{pifont}
 
-\title{Wspomaganie zarządzania projektami IT}
-\author{Mariusz Rychlicki 280451}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\title{Wykorzystanie oprogramowania\\do zarz\k{a}dzania konfiguracj\k{a}}
+\subtitle{Git \textbar{} Ansible \textbar{} Puppet \textbar{} Chef \textbar{} Terraform \textbar{} SaltStack}
+\author{Igor Zaworski 280631 \newline Mariusz Rychlicki 280451}
+\institute{Wspomaganie Zarz\k{a}dzania Projektami IT}
+\date{\today}
 
 \begin{document}
-\maketitle
 
-\date{}
+% ============================================================
+% 1. Tytu\l{}
+% ============================================================
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ============================================================
+% 2. Plan prezentacji
+% ============================================================
+\begin{frame}{Plan prezentacji}
+    \begin{enumerate}
+        \item Wprowadzenie -- czym jest zarz\k{a}dzanie konfiguracj\k{a}?
+        \item Typologia i kategorie narz\k{e}dzi CM
+        \item Przegl\k{a}d narz\k{e}dzi: Git, Ansible, Puppet, Chef, Terraform, SaltStack
+        \item Por\'ownanie funkcjonalne i cenowe
+        \item Zalety i wady ka\.zdego rozwi\k{a}zania
+        \item Podsumowanie korzy\'sci
+        \item \'{C}wiczenia praktyczne: Git i Ansible
+    \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Wprowadzenie}
+% ============================================================
+
+\begin{frame}{Co to jest zarz\k{a}dzanie konfiguracj\k{a}?}
+    \begin{block}{Definicja}
+        Zarz\k{a}dzanie konfiguracj\k{a} (CM) to proces \'{s}ledzenia i kontrolowania zmian
+        w oprogramowaniu, infrastrukturze i \'{s}rodowiskach systemowych.
+    \end{block}
+    \vspace{0.5em}
+    \begin{itemize}
+        \item Wywodzi si\k{e} z praktyk ITIL i wojskowych standard\'ow zarz\k{a}dzania
+        \item W erze DevOps sta\l{}o si\k{e} fundamentem automatyzacji IT
+        \item Umo\.zliwia \textbf{Infrastructure as Code} (IaC)
+        \item Kluczowe poj\k{e}cia: \textit{idempotentno\'s\'c}, \textit{desired state}, \textit{drift detection}
+    \end{itemize}
+    \vspace{0.5em}
+    \begin{alertblock}{Problem bez CM}
+        ,,Dzia\l{}a na moim komputerze'' -- brak reproducibility, r\k{e}czne konfiguracje,
+        brak audytu, ``snowflake servers''
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Cele i funkcje system\'ow CM}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Cele strategiczne}
+            \begin{itemize}
+                \item Sp\'ojno\'s\'c \'{s}rodowisk (dev/test/prod)
+                \item Redukcja b\l{}\k{e}d\'ow ludzkich
+                \item Audytowalno\'s\'c zmian
+                \item Szybki rollback
+                \item Dokumentacja infrastruktury w kodzie
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Funkcje operacyjne}
+            \begin{itemize}
+                \item Automatyzacja wdro\.ze\'n
+                \item Egzekwowanie stanu konfiguracji
+                \item Wykrywanie dryftu konfiguracji
+                \item Zarz\k{a}dzanie sekretami
+                \item Raportowanie zgodno\'sci
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{0.8em}
+    \begin{exampleblock}{Korzy\'sci biznesowe}
+        Szybsze wdro\.zenia $\Rightarrow$ ni\.zsze koszty operacyjne $\Rightarrow$ wy\.zsze SLA
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Struktura oprogramowania CM}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Model Push}
+            \begin{itemize}
+                \item Kontroler wysy\l{}a konfiguracj\k{e}
+                \item Natychmiastowe dzia\l{}anie
+                \item Przyk\l{}ady: Ansible, Terraform
+            \end{itemize}
+            \vspace{0.5em}
+            \textbf{Agentless}
+            \begin{itemize}
+                \item Komunikacja przez SSH/WinRM
+                \item Brak dodatkowego oprogramowania
+                \item \L{}atwiejsze wdro\.zenie
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Model Pull}
+            \begin{itemize}
+                \item Agent sam pobiera konfiguracj\k{e}
+                \item Ci\k{a}g\l{}e egzekwowanie stanu
+                \item Przyk\l{}ady: Puppet, Chef
+            \end{itemize}
+            \vspace{0.5em}
+            \textbf{Agent-based}
+            \begin{itemize}
+                \item Demon dzia\l{}a na w\k{e}\'zle
+                \item Lepsza skalowalno\'s\'c
+                \item Sta\l{}y monitoring stanu
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Przegl\k{a}d narz\k{e}dzi}
+% ============================================================
+
+\begin{frame}{Git}
+    \begin{columns}[T]
+        \begin{column}{0.63\textwidth}
+            \begin{itemize}
+                \item \textbf{Rok}: 2005, Linus Torvalds (dla j\k{a}dra Linux)
+                \item \textbf{Typ}: Rozproszony system kontroli wersji (DVCS)
+                \item \textbf{Licencja}: GPL v2 (darmowy)
+                \item \textbf{Hostingi}: GitHub, GitLab, Bitbucket
+            \end{itemize}
+            \vspace{0.4em}
+            \textbf{Kluczowe funkcje:}
+            \begin{itemize}
+                \item \'{S}ledzenie historii zmian w plikach (diff, blame)
+                \item Rozga\l{}\k{e}zianie (\textit{branching}) i \l{}\k{a}czenie (\textit{merging})
+                \item Praca offline -- pe\l{}ne repozytorium lokalnie
+                \item Podstawa dla CI/CD i GitOps
+                \item Tagi, hooki, submodule
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.34\textwidth}
+            \begin{block}{Zastosowanie}
+                \begin{itemize}
+                    \item Kod \'zr\'od\l{}owy
+                    \item Pliki konfiguracyjne
+                    \item Dokumentacja
+                    \item Playbooki Ansible
+                    \item Moduły Terraform
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Ansible}
+    \begin{columns}[T]
+        \begin{column}{0.63\textwidth}
+            \begin{itemize}
+                \item \textbf{Rok}: 2012; Red Hat przej\k{a}\l{} w 2015
+                \item \textbf{Typ}: Agentless CM, model push
+                \item \textbf{Licencja}: Apache 2.0 (Community)
+                \item \textbf{J\k{e}zyk}: YAML (playbooki)
+            \end{itemize}
+            \vspace{0.4em}
+            \textbf{Kluczowe funkcje:}
+            \begin{itemize}
+                \item Komunikacja przez SSH -- brak agent\'ow
+                \item Idempotentne modu\l{}y (ponad 3\,000)
+                \item Role i kolekcje (Ansible Galaxy)
+                \item Ansible Tower/AWX -- interfejs webowy
+                \item Obs\l{}uga sieci, chmury i kontener\'ow
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.34\textwidth}
+            \begin{block}{Zastosowanie}
+                \begin{itemize}
+                    \item Konfiguracja serwer\'ow
+                    \item Deployments
+                    \item Orkiestracja
+                    \item Patch management
+                    \item Provisioning VM
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Puppet}
+    \begin{columns}[T]
+        \begin{column}{0.63\textwidth}
+            \begin{itemize}
+                \item \textbf{Rok}: 2005, Puppet Labs (obecnie Perforce)
+                \item \textbf{Typ}: Agent-based CM, model pull
+                \item \textbf{Licencja}: Apache 2.0 (CE) / Puppet Enterprise
+                \item \textbf{J\k{e}zyk}: Puppet DSL (deklaratywny)
+            \end{itemize}
+            \vspace{0.4em}
+            \textbf{Kluczowe funkcje:}
+            \begin{itemize}
+                \item Deklaratywny -- opisujesz \textit{stan}, nie kroki
+                \item Puppet Master + Agent (katalog zasob\'ow)
+                \item PuppetDB -- historia zmian i fakt\'ow
+                \item Silne raportowanie i audyt
+                \item Hiera -- hierarchia danych konfiguracyjnych
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.34\textwidth}
+            \begin{block}{Zastosowanie}
+                \begin{itemize}
+                    \item Du\.ze enterprise
+                    \item Sta\l{}a zgodno\'s\'c
+                    \item Compliance
+                    \item Setki w\k{e}z\l{}\'ow
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Chef}
+    \begin{columns}[T]
+        \begin{column}{0.63\textwidth}
+            \begin{itemize}
+                \item \textbf{Rok}: 2009, Opscode; Progress Software od 2020
+                \item \textbf{Typ}: Agent-based CM, model pull
+                \item \textbf{Licencja}: Apache 2.0 (CE) / Progress Chef
+                \item \textbf{J\k{e}zyk}: Ruby DSL (cookbooks, recipes)
+            \end{itemize}
+            \vspace{0.4em}
+            \textbf{Kluczowe funkcje:}
+            \begin{itemize}
+                \item Chef Server, Workstation, Client (node)
+                \item Test Kitchen -- automatyczne testy konfiguracji
+                \item InSpec -- testy zgodno\'sci (compliance as code)
+                \item Supermarket -- spo\l{}eczno\'sciowe cookbooki
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.34\textwidth}
+            \begin{block}{Zastosowanie}
+                \begin{itemize}
+                    \item Z\l{}o\.zone logiki
+                    \item DevSecOps
+                    \item Compliance testing
+                    \item Finanse i banki
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Terraform}
+    \begin{columns}[T]
+        \begin{column}{0.63\textwidth}
+            \begin{itemize}
+                \item \textbf{Rok}: 2014, HashiCorp
+                \item \textbf{Typ}: IaC Provisioning, model push
+                \item \textbf{Licencja}: MPL 2.0 (CE) / HCP Terraform
+                \item \textbf{J\k{e}zyk}: HCL (HashiCorp Configuration Language)
+            \end{itemize}
+            \vspace{0.4em}
+            \textbf{Kluczowe funkcje:}
+            \begin{itemize}
+                \item Tworzenie infrastruktury
+                \item Ponad 3\,000 provider\'ow (AWS itd.)
+                \item \texttt{plan} $\rightarrow$ \texttt{apply} -- podgl\k{a}d zmian przed wdro\.zeniem
+                \item Zarz\k{a}dzanie stanem (\texttt{terraform.tfstate})
+                \item Fork OpenTofu (BSL od 2023)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.34\textwidth}
+            \begin{block}{Zastosowanie}
+                \begin{itemize}
+                    \item Chmura (AWS/Azure/GCP)
+                    \item Multi-cloud
+                    \item Kubernetes
+                    \item Sieci i DNS
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{SaltStack}
+    \begin{columns}[T]
+        \begin{column}{0.63\textwidth}
+            \begin{itemize}
+                \item \textbf{Rok}: 2011; VMware przej\k{a}\l{} w 2020
+                \item \textbf{Typ}: CM + Event-driven automation
+                \item \textbf{Licencja}: Apache 2.0 (CE) / VMware Aria
+                \item \textbf{J\k{e}zyk}: YAML + Jinja2
+            \end{itemize}
+            \vspace{0.4em}
+            \textbf{Kluczowe funkcje:}
+            \begin{itemize}
+                \item Szybka komunikacja przez ZeroMQ
+                \item Salt Master + Salt Minion (lub SSH agentless)
+                \item Reaktory i zdarzenia -- automatyczne odpowiedzi
+                \item Obs\l{}uga tysi\k{e}cy w\k{e}z\l{}\'ow r\'ownolegle
+                \item Grains i Pillars -- dane o w\k{e}z\l{}ach
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.34\textwidth}
+            \begin{block}{Zastosowanie}
+                \begin{itemize}
+                    \item Du\.ze infrastruktury
+                    \item Event-driven ops
+                    \item Cloud management
+                    \item VMware/vSphere
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Por\'ownanie}
+% ============================================================
+
+\begin{frame}{Por\'ownanie funkcjonalne}
+    \begin{center}
+        \scriptsize
+        \setlength{\tabcolsep}{4pt}
+        \begin{tabular}{@{}lllccp{2.4cm}@{}}
+            \toprule
+            \textbf{Narz\k{e}dzie} & \textbf{Kategoria} & \textbf{Model} & \textbf{Agentless} & \textbf{J\k{e}zyk/DSL} & \textbf{Krzywa uczenia} \\
+            \midrule
+            Git                    & SCM                & distributed    & \cmark             & --                     & \'{S}rednia             \\
+            Ansible                & CM                 & push           & \cmark             & YAML                   & Niska                   \\
+            Puppet                 & CM                 & pull           & \xmark             & Puppet DSL             & Wysoka                  \\
+            Chef                   & CM                 & pull           & \xmark             & Ruby DSL               & Bardzo wysoka           \\
+            Terraform              & IaC                & push           & \cmark             & HCL                    & \'{S}rednia             \\
+            SaltStack              & CM                 & push/pull      & opcja              & YAML/Jinja2            & Wysoka                  \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \vspace{0.4em}
+    \begin{center}
+        \scriptsize
+        \setlength{\tabcolsep}{4pt}
+        \begin{tabular}{@{}lll@{}}
+            \toprule
+            \textbf{Narz\k{e}dzie} & \textbf{Platformy}                      & \textbf{Integracja z chmur\k{a}}        \\
+            \midrule
+            Git                    & Wszystkie systemy                       & GitHub Actions, GitLab CI, Azure DevOps \\
+            Ansible                & Linux, Windows, urz\k{a}dzenia sieciowe & AWS, Azure, GCP, OpenStack              \\
+            Puppet                 & Linux, Windows, macOS                   & AWS, Azure, GCP                         \\
+            Chef                   & Linux, Windows, macOS                   & AWS, Azure, GCP                         \\
+            Terraform              & API/chmura (nie OS)                     & AWS, Azure, GCP, Oracle, IBM i in.      \\
+            SaltStack              & Linux, Windows                          & AWS, Azure, GCP, VMware                 \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Por\'ownanie rynkowe i cenowe}
+    \begin{center}
+        \footnotesize
+        \setlength{\tabcolsep}{4pt}
+        \begin{tabular}{@{}llll@{}}
+            \toprule
+            \textbf{Narz\k{e}dzie} & \textbf{Licencja (CE)} & \textbf{Wersja Enterprise} & \textbf{Cena Enterprise}                  \\
+            \midrule
+            Git                    & GPL v2                 & -                          & -                                         \\
+            Ansible                & Apache 2.0             & Red Hat AAP                & $\sim$\$14\,000/rok (100 w\k{e}z\l{}\'ow) \\
+            Puppet                 & Apache 2.0             & Puppet Enterprise          & $\sim$\$112/w\k{e}ze\l{}/rok              \\
+            Chef                   & Apache 2.0             & Progress Chef              & $\sim$\$130/w\k{e}ze\l{}/rok              \\
+            Terraform              & MPL 2.0                & HCP Terraform Plus         & \$20/user/mies.                           \\
+            SaltStack              & Apache 2.0             & VMware Aria Automation     & kontraktowo                               \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \vspace{0.5em}
+    \begin{alertblock}{Wa\.zna uwaga}
+        Wszystkie narz\k{e}dzia maj\k{a} darmowe wersje open source.
+        Koszty enterprise rosn\k{a} wraz z liczb\k{a} w\k{e}z\l{}\'ow/u\.zytkownik\'ow.
+        Przy 100+ w\k{e}z\l{}ach koszt mo\.ze przekroczy\'c \$10\,000/rok.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Zalety i wady -- Git, Ansible, Puppet}
+    \tiny
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{@{}p{1.8cm}p{4.8cm}p{4.8cm}@{}}
+        \toprule
+        \textbf{Narz\k{e}dzie}                                                                                                       & \textbf{Zalety} & \textbf{Wady} \\
+        \midrule
+        \textbf{Git}                                                                                                                 &
+        Darmowy; rozproszony (offline); szybki branching; ogromna spo\l{}eczno\'s\'c; standard bran\.zowy; wersjonowanie wszystkiego &
+        Konflikty merge; krzywa uczenia (rebase, cherry-pick); trudne zarz\k{a}dzanie du\.zymi plikami binarnymi (wymaga Git LFS)                                      \\
+        \addlinespace[4pt]
+        \textbf{Ansible}                                                                                                             &
+        Agentless (tylko SSH); YAML \l{}atwy do nauki; ponad 3000 modu\l{}\'ow; Ansible Galaxy; szybki start; idempotentno\'s\'c     &
+        Wolniejszy przy tysi\k{a}cach w\k{e}z\l{}\'ow; push -- brak ci\k{a}g\l{}ego monitoringu stanu; brak natywnego GUI (wymaga Tower/AWX)                           \\
+        \addlinespace[4pt]
+        \textbf{Puppet}                                                                                                              &
+        Dojrza\l{}e rozwi\k{a}zanie enterprise; silny model po\.z\k{a}danego stanu; dobre raportowanie; PuppetDB; Hiera              &
+        Wymaga agenta; trudny w\l{}asny DSL; drogie licencje Enterprise; mniejsza spo\l{}eczno\'s\'c ni\.z Ansible                                                     \\
+        \bottomrule
+    \end{tabular}
+\end{frame}
+
+\begin{frame}{Zalety i wady -- Chef, Terraform, SaltStack}
+    \tiny
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{@{}p{1.8cm}p{4.8cm}p{4.8cm}@{}}
+        \toprule
+        \textbf{Narz\k{e}dzie}                                                                                                 & \textbf{Zalety} & \textbf{Wady} \\
+        \midrule
+        \textbf{Chef}                                                                                                          &
+        Bardzo elastyczny (pe\l{}ny Ruby); silne testowanie (Test Kitchen); InSpec dla compliance; dojrza\l{}e rozwi\k{a}zanie &
+        Du\.zy pr\'og wej\'scia (Ruby); z\l{}o\.zona architektura; mniejsza spo\l{}eczno\'s\'c; kosztowne licencje enterprise                                    \\
+        \addlinespace[4pt]
+        \textbf{Terraform}                                                                                                     &
+        Provider-agnostic; deklaratywny; plan przed apply; ogromny ekosystem provider\'ow; standard dla chmury                 &
+        Zarz\k{a}dzanie stanem (remote backend); nie konfiguruje OS; zmiana licencji BSL (2023) -- powsta\l{} fork OpenTofu                                      \\
+        \addlinespace[4pt]
+        \textbf{SaltStack}                                                                                                     &
+        Bardzo szybki (ZeroMQ); event-driven; elastyczny (push i pull); \'{s}wietny dla du\.zych infrastruktur; reaktory       &
+        Mniejsza popularno\'s\'c ni\.z Ansible; z\l{}o\.zona konfiguracja; s\l{}absza dokumentacja; niepewna przysz\l{}o\'s\'c po przej\k{e}ciu przez VMware     \\
+        \bottomrule
+    \end{tabular}
+\end{frame}
+
+% ============================================================
+\section{Podsumowanie}
+% ============================================================
+
+\begin{frame}{Podsumowanie korzy\'sci}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Dla programisty / admina}
+            \begin{itemize}
+                \item Automatyzacja powtarzalnych zada\'n
+                \item Wersjonowanie infrastruktury jak kodu
+                \item Szybki rollback do poprzedniego stanu
+                \item Reproducibility -- identyczne \'srodowiska
+                \item Mniej pomy\l{}ek, mniej pracy r\k{e}cznej
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Dla organizacji}
+            \begin{itemize}
+                \item Ni\.zsze koszty operacyjne (OPEX)
+                \item Szybsze wdro\.zenia -- wy\.zszy TTM
+                \item Zgodno\'s\'c z regulacjami (compliance)
+                \item Wy\.zsza dost\k{e}pno\'s\'c (SLA/SLO)
+                \item Dokumentacja infrastruktury w kodzie
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{0.8em}
+    \begin{exampleblock}{Rekomendacja na 2025}
+        Wybor narz\k{e}dzia zale\.zy od skali, chmury i kompetencji zespo\l{}u.\\
+        Najcz\k{e}stszy zestaw: \textbf{Git + Terraform + Ansible}
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{\'{C}wiczenia praktyczne}
+% ============================================================
+
+\begin{frame}[fragile]{Git -- podstawy dla \'{c}wicze\'n}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Podstawowe komendy}
+            \begin{itemize}
+                \item \texttt{git init} / \texttt{git clone <url>}
+                \item \texttt{git add .} / \texttt{git commit -m}
+                \item \texttt{git push} / \texttt{git pull}
+                \item \texttt{git branch <name>} / \texttt{git checkout}
+                \item \texttt{git merge} / \texttt{git rebase}
+                \item \texttt{git log --oneline --graph}
+                \item \texttt{git stash} / \texttt{git tag v1.0}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Workflow GitFlow}
+            \begin{itemize}
+                \item \texttt{main} -- produkcja (stabilna)
+                \item \texttt{develop} -- integracja
+                \item \texttt{feature/X} -- nowe funkcje
+                \item \texttt{release/X} -- przygotowanie
+                \item \texttt{hotfix/X} -- pilne poprawki
+            \end{itemize}
+            \vspace{0.3em}
+            \textbf{Dobre praktyki}
+            \begin{itemize}
+                \item Conventionals Commits
+                \item \texttt{.gitignore} dla sekret\'ow
+                \item Pull Requests + code review
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Ansible -- podstawy dla \'{c}wicze\'n}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Struktura projektu}
+            \begin{itemize}
+                \item \texttt{inventory/} -- lista host\'ow
+                \item \texttt{playbooks/} -- g\l{}\'owne playbooki
+                \item \texttt{roles/} -- wielokrotnego u\.zytku
+                \item \texttt{group\_vars/} -- zmienne grup
+                \item \texttt{ansible.cfg} -- konfiguracja
+            \end{itemize}
+            \vspace{0.3em}
+            \textbf{Ad-hoc commands}\\[0.2em]
+            \texttt{\scriptsize ansible all -m ping}\\
+            \texttt{\scriptsize ansible web -m apt -a "name=nginx"}\\
+            \texttt{\scriptsize ansible-playbook site.yml}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Przyk\l{}adowy playbook YAML}\\[0.2em]
+            \scriptsize
+            \texttt{---}\\
+            \texttt{- hosts: webservers}\\
+            \texttt{\ \ become: yes}\\
+            \texttt{\ \ vars:}\\
+            \texttt{\ \ \ \ pkg: nginx}\\
+            \texttt{\ \ tasks:}\\
+            \texttt{\ \ - name: Install {{ pkg }}}\\
+            \texttt{\ \ \ \ apt:}\\
+            \texttt{\ \ \ \ \ \ name: "{{ pkg }}"}\\
+            \texttt{\ \ \ \ \ \ state: present}\\
+            \texttt{\ \ - name: Start {{ pkg }}}\\
+            \texttt{\ \ \ \ service:}\\
+            \texttt{\ \ \ \ \ \ name: "{{ pkg }}"}\\
+            \texttt{\ \ \ \ \ \ state: started}\\
+            \texttt{\ \ \ \ \ \ enabled: yes}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% Zako\'nczenie
+% ============================================================
+\begin{frame}{}
+    \begin{center}
+        \vspace{1.5em}
+        {\Huge \textbf{Dzi\k{e}kuj\k{e} za uwag\k{e}}}\\[1.2em]
+        {\Large Pytania?}\\[1.8em]
+        \footnotesize
+        \begin{tabular}{ll}
+            \textbf{Temat:}         & Zarz\k{a}dzanie konfiguracj\k{a} w IT            \\[0.3em]
+            \textbf{Narz\k{e}dzia:} & Git, Ansible, Puppet, Chef, Terraform, SaltStack \\[0.3em]
+            \textbf{Autor:}         & Igor Zaworski 280631 Mariusz Rychlicki 280451    \\
+        \end{tabular}
+    \end{center}
+\end{frame}
+
 \end{document}
