@@ -1,1 +1,1 @@
-Prezentacja znajduje się w katalogu `docs`.
+Prezentacja znajduje się w katalogu `docs` a specyfikacja zadania w katalogu `task`.
