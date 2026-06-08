@@ -39,6 +39,12 @@ docker compose exec control bash
 Jesteś teraz w kontenerze **control**, w katalogu `~/workspace` - to repozytorium git
 z konfiguracją Ansible.
 
+Upewnij się, że jesteś na branchu `master`:
+
+```bash
+git checkout master
+```
+
 Wykonaj wdrożenie za pomocą Ansible:
 
 ```bash
