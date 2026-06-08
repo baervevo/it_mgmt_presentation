@@ -15,7 +15,7 @@
 \newcommand{\xmark}{\ding{55}}
 
 \title{Wykorzystanie oprogramowania\\do zarz\k{a}dzania konfiguracj\k{a}}
-\subtitle{Git \textbar{} Ansible \textbar{} Puppet \textbar{} Chef \textbar{} Terraform \textbar{} SaltStack}
+\subtitle{Git \textbar{} Ansible \textbar{} Puppet \textbar{} Chef \textbar{} Terraform}
 \author{Igor Zaworski 280631 \newline Mariusz Rychlicki 280451}
 \institute{Wspomaganie Zarz\k{a}dzania Projektami IT}
 \date{\today}
@@ -36,7 +36,7 @@
     \begin{enumerate}
         \item Wprowadzenie -- czym jest zarz\k{a}dzanie konfiguracj\k{a}?
         \item Typologia i kategorie narz\k{e}dzi CM
-        \item Przegl\k{a}d narz\k{e}dzi: Git, Ansible, Puppet, Chef, Terraform, SaltStack
+        \item Przegl\k{a}d narz\k{e}dzi: Git, Ansible, Puppet, Chef, Terraform
         \item Por\'ownanie funkcjonalne i cenowe
         \item Zalety i wady ka\.zdego rozwi\k{a}zania
         \item Podsumowanie korzy\'sci
@@ -61,10 +61,6 @@
         \item Kluczowe poj\k{e}cia: \textit{idempotentno\'s\'c}, \textit{desired state}, \textit{drift detection}
     \end{itemize}
     \vspace{0.5em}
-    \begin{alertblock}{Problem bez CM}
-        ,,Dzia\l{}a na moim komputerze'' -- brak reproducibility, r\k{e}czne konfiguracje,
-        brak audytu, ``snowflake servers''
-    \end{alertblock}
 \end{frame}
 
 \begin{frame}{Cele i funkcje system\'ow CM}
@@ -91,9 +87,6 @@
         \end{column}
     \end{columns}
     \vspace{0.8em}
-    \begin{exampleblock}{Korzy\'sci biznesowe}
-        Szybsze wdro\.zenia $\Rightarrow$ ni\.zsze koszty operacyjne $\Rightarrow$ wy\.zsze SLA
-    \end{exampleblock}
 \end{frame}
 
 \begin{frame}{Struktura oprogramowania CM}
@@ -139,9 +132,9 @@
     \begin{columns}[T]
         \begin{column}{0.63\textwidth}
             \begin{itemize}
-                \item \textbf{Rok}: 2005, Linus Torvalds (dla j\k{a}dra Linux)
-                \item \textbf{Typ}: Rozproszony system kontroli wersji (DVCS)
-                \item \textbf{Licencja}: GPL v2 (darmowy)
+                \item \textbf{Rok}: 2005, Linus Torvalds
+                \item \textbf{Typ}: Rozproszony system kontroli wersji
+                \item \textbf{Licencja}: GPL v2
                 \item \textbf{Hostingi}: GitHub, GitLab, Bitbucket
             \end{itemize}
             \vspace{0.4em}
@@ -174,17 +167,16 @@
             \begin{itemize}
                 \item \textbf{Rok}: 2012; Red Hat przej\k{a}\l{} w 2015
                 \item \textbf{Typ}: Agentless CM, model push
-                \item \textbf{Licencja}: Apache 2.0 (Community)
-                \item \textbf{J\k{e}zyk}: YAML (playbooki)
+                \item \textbf{Licencja}: GPL v3
+                \item \textbf{J\k{e}zyk}: YAML
             \end{itemize}
             \vspace{0.4em}
             \textbf{Kluczowe funkcje:}
             \begin{itemize}
                 \item Komunikacja przez SSH -- brak agent\'ow
-                \item Idempotentne modu\l{}y (ponad 3\,000)
-                \item Role i kolekcje (Ansible Galaxy)
+                \item Idempotentne modu\l{}y
+                \item Role i kolekcje zapewniające modularno\'s\'c
                 \item Ansible Tower/AWX -- interfejs webowy
-                \item Obs\l{}uga sieci, chmury i kontener\'ow
             \end{itemize}
         \end{column}
         \begin{column}{0.34\textwidth}
@@ -207,8 +199,8 @@
             \begin{itemize}
                 \item \textbf{Rok}: 2005, Puppet Labs (obecnie Perforce)
                 \item \textbf{Typ}: Agent-based CM, model pull
-                \item \textbf{Licencja}: Apache 2.0 (CE) / Puppet Enterprise
-                \item \textbf{J\k{e}zyk}: Puppet DSL (deklaratywny)
+                \item \textbf{Licencja}: Apache
+                \item \textbf{J\k{e}zyk}: Puppet DSL
             \end{itemize}
             \vspace{0.4em}
             \textbf{Kluczowe funkcje:}
@@ -239,8 +231,8 @@
             \begin{itemize}
                 \item \textbf{Rok}: 2009, Opscode; Progress Software od 2020
                 \item \textbf{Typ}: Agent-based CM, model pull
-                \item \textbf{Licencja}: Apache 2.0 (CE) / Progress Chef
-                \item \textbf{J\k{e}zyk}: Ruby DSL (cookbooks, recipes)
+                \item \textbf{Licencja}: Apache 2.0
+                \item \textbf{J\k{e}zyk}: Ruby DSL
             \end{itemize}
             \vspace{0.4em}
             \textbf{Kluczowe funkcje:}
@@ -296,38 +288,6 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}{SaltStack}
-    \begin{columns}[T]
-        \begin{column}{0.63\textwidth}
-            \begin{itemize}
-                \item \textbf{Rok}: 2011; VMware przej\k{a}\l{} w 2020
-                \item \textbf{Typ}: CM + Event-driven automation
-                \item \textbf{Licencja}: Apache 2.0 (CE) / VMware Aria
-                \item \textbf{J\k{e}zyk}: YAML + Jinja2
-            \end{itemize}
-            \vspace{0.4em}
-            \textbf{Kluczowe funkcje:}
-            \begin{itemize}
-                \item Szybka komunikacja przez ZeroMQ
-                \item Salt Master + Salt Minion (lub SSH agentless)
-                \item Reaktory i zdarzenia -- automatyczne odpowiedzi
-                \item Obs\l{}uga tysi\k{e}cy w\k{e}z\l{}\'ow r\'ownolegle
-                \item Grains i Pillars -- dane o w\k{e}z\l{}ach
-            \end{itemize}
-        \end{column}
-        \begin{column}{0.34\textwidth}
-            \begin{block}{Zastosowanie}
-                \begin{itemize}
-                    \item Du\.ze infrastruktury
-                    \item Event-driven ops
-                    \item Cloud management
-                    \item VMware/vSphere
-                \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
-\end{frame}
-
 % ============================================================
 \section{Por\'ownanie}
 % ============================================================
@@ -345,7 +305,6 @@
             Puppet                 & CM                 & pull           & \xmark             & Puppet DSL             & Wysoka                  \\
             Chef                   & CM                 & pull           & \xmark             & Ruby DSL               & Bardzo wysoka           \\
             Terraform              & IaC                & push           & \cmark             & HCL                    & \'{S}rednia             \\
-            SaltStack              & CM                 & push/pull      & opcja              & YAML/Jinja2            & Wysoka                  \\
             \bottomrule
         \end{tabular}
     \end{center}
@@ -362,7 +321,6 @@
             Puppet                 & Linux, Windows, macOS                   & AWS, Azure, GCP                         \\
             Chef                   & Linux, Windows, macOS                   & AWS, Azure, GCP                         \\
             Terraform              & API/chmura (nie OS)                     & AWS, Azure, GCP, Oracle, IBM i in.      \\
-            SaltStack              & Linux, Windows                          & AWS, Azure, GCP, VMware                 \\
             \bottomrule
         \end{tabular}
     \end{center}
@@ -377,20 +335,14 @@
             \textbf{Narz\k{e}dzie} & \textbf{Licencja (CE)} & \textbf{Wersja Enterprise} & \textbf{Cena Enterprise}                  \\
             \midrule
             Git                    & GPL v2                 & -                          & -                                         \\
-            Ansible                & Apache 2.0             & Red Hat AAP                & $\sim$\$14\,000/rok (100 w\k{e}z\l{}\'ow) \\
-            Puppet                 & Apache 2.0             & Puppet Enterprise          & $\sim$\$112/w\k{e}ze\l{}/rok              \\
-            Chef                   & Apache 2.0             & Progress Chef              & $\sim$\$130/w\k{e}ze\l{}/rok              \\
-            Terraform              & MPL 2.0                & HCP Terraform Plus         & \$20/user/mies.                           \\
-            SaltStack              & Apache 2.0             & VMware Aria Automation     & kontraktowo                               \\
+            Ansible                & GPL v3                 & Red Hat AAP                & $\sim$\$5-20 tyś za rok                   \\
+            Puppet                 & Apache 2.0             & Puppet Enterprise          & $\sim$\$120/w\k{e}ze\l{}/rok              \\
+            Chef                   & Apache 2.0             & Progress Chef              & $\sim$\$189/w\k{e}ze\l{}/rok              \\
+            Terraform              & MPL 2.0                & HCP Terraform Plus         & $\sim$\$0.10-\$0.99/zasób/mies.                           \\
             \bottomrule
         \end{tabular}
     \end{center}
     \vspace{0.5em}
-    \begin{alertblock}{Wa\.zna uwaga}
-        Wszystkie narz\k{e}dzia maj\k{a} darmowe wersje open source.
-        Koszty enterprise rosn\k{a} wraz z liczb\k{a} w\k{e}z\l{}\'ow/u\.zytkownik\'ow.
-        Przy 100+ w\k{e}z\l{}ach koszt mo\.ze przekroczy\'c \$10\,000/rok.
-    \end{alertblock}
 \end{frame}
 
 \begin{frame}{Zalety i wady -- Git, Ansible, Puppet}
@@ -415,7 +367,7 @@
     \end{tabular}
 \end{frame}
 
-\begin{frame}{Zalety i wady -- Chef, Terraform, SaltStack}
+\begin{frame}{Zalety i wady -- Chef, Terraform}
     \tiny
     \setlength{\tabcolsep}{3pt}
     \begin{tabular}{@{}p{1.8cm}p{4.8cm}p{4.8cm}@{}}
@@ -429,10 +381,6 @@
         \textbf{Terraform}                                                                                                     &
         Provider-agnostic; deklaratywny; plan przed apply; ogromny ekosystem provider\'ow; standard dla chmury                 &
         Zarz\k{a}dzanie stanem (remote backend); nie konfiguruje OS; zmiana licencji BSL (2023) -- powsta\l{} fork OpenTofu                                      \\
-        \addlinespace[4pt]
-        \textbf{SaltStack}                                                                                                     &
-        Bardzo szybki (ZeroMQ); event-driven; elastyczny (push i pull); \'{s}wietny dla du\.zych infrastruktur; reaktory       &
-        Mniejsza popularno\'s\'c ni\.z Ansible; z\l{}o\.zona konfiguracja; s\l{}absza dokumentacja; niepewna przysz\l{}o\'s\'c po przej\k{e}ciu przez VMware     \\
         \bottomrule
     \end{tabular}
 \end{frame}
@@ -465,10 +413,6 @@
         \end{column}
     \end{columns}
     \vspace{0.8em}
-    \begin{exampleblock}{Rekomendacja na 2025}
-        Wybor narz\k{e}dzia zale\.zy od skali, chmury i kompetencji zespo\l{}u.\\
-        Najcz\k{e}stszy zestaw: \textbf{Git + Terraform + Ansible}
-    \end{exampleblock}
 \end{frame}
 
 % ============================================================
@@ -535,13 +479,13 @@
             \texttt{\ \ vars:}\\
             \texttt{\ \ \ \ pkg: nginx}\\
             \texttt{\ \ tasks:}\\
-            \texttt{\ \ - name: Install {{ pkg }}}\\
+            \texttt{\ \ - name: Install pkg}\\
             \texttt{\ \ \ \ apt:}\\
-            \texttt{\ \ \ \ \ \ name: "{{ pkg }}"}\\
+            \texttt{\ \ \ \ \ \ name: "\{\{ pkg \}\}"}\\
             \texttt{\ \ \ \ \ \ state: present}\\
-            \texttt{\ \ - name: Start {{ pkg }}}\\
+            \texttt{\ \ - name: Start pkg }\\
             \texttt{\ \ \ \ service:}\\
-            \texttt{\ \ \ \ \ \ name: "{{ pkg }}"}\\
+            \texttt{\ \ \ \ \ \ name: "\{\{ pkg \}\}"}\\
             \texttt{\ \ \ \ \ \ state: started}\\
             \texttt{\ \ \ \ \ \ enabled: yes}
         \end{column}
@@ -554,14 +498,10 @@
 \begin{frame}{}
     \begin{center}
         \vspace{1.5em}
-        {\Huge \textbf{Dzi\k{e}kuj\k{e} za uwag\k{e}}}\\[1.2em]
+        {\Huge \textbf{Dzi\k{e}kujemy za uwag\k{e}}}\\[1.2em]
         {\Large Pytania?}\\[1.8em]
         \footnotesize
-        \begin{tabular}{ll}
-            \textbf{Temat:}         & Zarz\k{a}dzanie konfiguracj\k{a} w IT            \\[0.3em]
-            \textbf{Narz\k{e}dzia:} & Git, Ansible, Puppet, Chef, Terraform, SaltStack \\[0.3em]
-            \textbf{Autor:}         & Igor Zaworski 280631 Mariusz Rychlicki 280451    \\
-        \end{tabular}
+        Igor Zaworski 280631 Mariusz Rychlicki 280451
     \end{center}
 \end{frame}
 
