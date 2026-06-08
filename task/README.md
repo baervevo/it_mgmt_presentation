@@ -24,6 +24,13 @@
 
 ## Start
 
+Najprościej skryptem startowym (buduje kontenery i wchodzi do `control`):
+
+- Linux/macOS: `./start.sh`
+- Windows: `start.bat` (dwuklik lub w wierszu poleceń)
+
+Równoważnie ręcznie:
+
 ```bash
 cd task
 docker compose up -d --build
