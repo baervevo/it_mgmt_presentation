@@ -1,3 +1,5 @@
+Niezbędne pliki znajdziesz na [repozytorium](https://github.com/baervevo/it_mgmt_presentation/)
+
 ## Architektura
 
 ```
