@@ -39,19 +39,19 @@ IGOR
 
 ## 11.
 
-MARIAN
+IGOR
 
 ## 12.
 
-IGOR
+MARIAN
 
 ## 13.
 
-MARIAN
+IGOR
 
 ## 14.
 
-IGOR
+MARIAN
 
 ## 15.
 
@@ -59,14 +59,10 @@ MARIAN
 
 ## 16.
 
-MARIAN
+IGOR
 
 ## 17.
 
-IGOR
-
-## 18.
-
 MARIAN
 
-## 19.
+## 18.
