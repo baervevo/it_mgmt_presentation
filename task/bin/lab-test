@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if curl -fs http://target/ | grep -q 'Serwer dziala OK'; then
+    echo "TEST OK"
+    exit 0
+else
+    echo "TEST FAIL"
+    exit 1
+fi

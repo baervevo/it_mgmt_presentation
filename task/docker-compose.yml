@@ -1,0 +1,24 @@
+services:
+  target:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lab-target
+    ports:
+      - "8080:80"
+    volumes:
+      - keys:/keys
+
+  control:
+    build:
+      context: .
+      dockerfile: Dockerfile.control
+    container_name: lab-control
+    depends_on:
+      - target
+    volumes:
+      - keys:/keys
+      - ./workspace:/root/workspace
+
+volumes:
+  keys:
