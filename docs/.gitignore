@@ -1,0 +1,72 @@
+# LaTeX auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+# Bibliography auxiliary files
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+# Build tool auxiliary files
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+# Auxiliary and intermediate files
+*.pdf
+*.dvi
+*.xdv
+*-converted-to.*
+
+# Index and glossary files
+*.idx
+*.ilg
+*.ind
+*.ist
+*.glo
+*.gls
+*.glg
+
+# Listings package
+*.lol
+
+# hyperref package
+*.brf
+
+# nomencl package
+*.nlo
+*.nls
+
+# latexdiff
+*.latexmain
+
+# TikZ/PGF
+*.dpth
+*.md5
+*.auxlock
+
+# Editor directories and files
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
