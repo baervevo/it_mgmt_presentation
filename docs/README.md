@@ -41,13 +41,13 @@ IGOR
 
 IGOR
 
-puppet darmowy do 25 węzłów, dalej trzeba się kontaktować z działem sprzedaży
-HCP terraform w dużej mierze darmowe dla małych drużyn
-Generalnie wszędzie proponują kontaktować się z działem sprzedaży
-
 ## 12.
 
 MARIAN
+
+puppet darmowy do 25 węzłów, dalej trzeba się kontaktować z działem sprzedaży
+HCP terraform w dużej mierze darmowe dla małych drużyn
+Generalnie wszędzie proponują kontaktować się z działem sprzedaży
 
 ## 13.
 
