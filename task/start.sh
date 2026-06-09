@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Start ćwiczenia (Linux/macOS): zbuduj i uruchom kontenery, wejdź do control.
 set -e
 cd "$(dirname "$0")"
